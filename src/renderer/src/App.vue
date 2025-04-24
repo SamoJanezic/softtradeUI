@@ -1,15 +1,33 @@
 <template>
 	<div class="app">
-		<Sidebar />
-		<TableView />
-
+		<sidebar @change-view="callback"/>
+		<table-view :currentTable :edit />
 	</div>
 </template>
 
-<script setup>
+<script>
 import Sidebar from './components/SidebarView.vue'
 import TableView from './components/TableView.vue'
+// import { ref } from 'vue'
 
+export default {
+	name: 'App',
+	components: {
+		Sidebar,
+		TableView,
+	},
+	data() {
+		return {
+			currentTable: null,
+			edit: false
+		}
+	},
+	methods: {
+		callback(table) {
+			this.currentTable = table;
+		}
+	}
+}
 </script>
 
 

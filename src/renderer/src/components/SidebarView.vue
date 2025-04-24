@@ -121,31 +121,31 @@
 			<hr />
 			<ul class="nav nav-pills flex-column mb-auto">
 				<li class="nav-item">
-					<a href="#" class="icon nav-link active" aria-current="page">
+					<a href="#" class="icon nav-link active" aria-current="page" @click="$emit('changeView', 'home')">
 						<svg class="bi me-2" width="16" height="16">
 							<use xlink:href="#home"></use>
 						</svg>
-						Home
+						Domov
 					</a>
 				</li>
 				<li>
-					<a href="#" class="icon nav-link text-white">
+					<a href="#" class="icon nav-link text-white" @click="$emit('changeView', 'IZDELEK_DOBAVITELJ')">
 						<svg class="bi me-2" width="16" height="16">
-							<use xlink:href="#speedometer2"></use>
+							<use xlink:href="#grid"></use>
 						</svg>
-						Dashboard
+						Izdelki
 					</a>
 				</li>
 				<li>
-					<a href="#" class="icon nav-link text-white">
+					<a href="#" class="icon nav-link text-white" @click="$emit('changeView', 'KATEGORIJA')">
 						<svg class="bi me-2" width="16" height="16">
 							<use xlink:href="#table"></use>
 						</svg>
-						Orders
+						Kategorije
 					</a>
 				</li>
-				<li>
-					<a href="#" class="icon nav-link text-white">
+				<!-- <li>
+					<a href="#" class="icon nav-link text-white" @click="$emit('someEvent')">
 						<svg class="bi me-2" width="16" height="16">
 							<use xlink:href="#grid"></use>
 						</svg>
@@ -153,15 +153,16 @@
 					</a>
 				</li>
 				<li>
-					<a href="#" class="icon nav-link text-white">
+					<a href="#" class="icon nav-link text-white" @click="$emit('someEvent')">
 						<svg class="bi me-2" width="16" height="16">
 							<use xlink:href="#people-circle"></use>
 						</svg>
 						Customers
 					</a>
-				</li>
+				</li> -->
 				<hr />
 			</ul>
+
 			<!-- <div class="dropdown">
 				<a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
 					<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Github-desktop-logo-symbol.svg/2048px-Github-desktop-logo-symbol.svg.png" alt="" width="32" height="32" class="rounded-circle me-2">
@@ -179,7 +180,9 @@
 	</div>
 </template>
 
-<script></script>
+<script>
+
+</script>
 
 <style scoped lang="scss">
 .sidebar {

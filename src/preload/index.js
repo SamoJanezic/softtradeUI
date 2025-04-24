@@ -1,11 +1,14 @@
 import { contextBridge } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
-import { getCategories } from '../../models/sql.js'
+import { getTable, getSingle } from '../../models/sql.js'
 // Custom APIs for renderer
 const api = {
-  getCategories: () => {
-    return getCategories()
+  getTable: (param) => {
+    return getTable(param)
   },
+  getSingle: (id) => {
+    return getSingle(id)
+  }
   // Add more APIs as needed
 }
 
