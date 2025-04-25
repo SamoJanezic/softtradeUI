@@ -186,6 +186,8 @@
 
 <style scoped lang="scss">
 .sidebar {
+	position: sticky;
+	top: 0;
 	display: grid;
 	height: 100vh;
 

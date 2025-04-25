@@ -10,10 +10,10 @@
 			@row-doubleClicked="rowClicked"
 			:default-col-def="defaultColDef"
 			pagination=true
+			@cellKeyDown="onCellKeyDown"
 			>
 		</ag-grid-vue>
-		<!-- <button @click="getData">Click me to show Data</button>
-		<p>{{ data }}</p> -->
+		<button v-if="currentTable === 'KATEGORIJA'" @click="updateAll" class="btn btn-primary pill fw-medium save-btn">Shrani spremembe</button>
 	</div>
 </template>
 
@@ -47,6 +47,7 @@ export default {
 				flex: 1,
 				minWidth: 100,
 			},
+			changedData: [],
 		}
 	},
 	methods: {
@@ -54,6 +55,9 @@ export default {
 			const rows = window.api.getTable(table);
 
 			this.columnDefs = Object.keys(rows[0]).map(key => {
+				if(key === 'marza') {
+					return {field: key, editable: true}
+				}
 				return {field: key};
 			})
 
@@ -69,6 +73,17 @@ export default {
 		closeEdit() {
 			this.editing = false;
 		},
+		onCellKeyDown(event) {
+			if(event.event.key === 'Enter') {
+				this.changedData.push([event.value, event.data.kategorija_id]);
+			}
+			console.log('key pressed', event)
+		},
+		updateAll(){
+			this.changedData.forEach(el => {
+				window.api.updateKategorija(el[0], el[1])
+			})
+		}
 	},
 	watch: {
 		currentTable: function() {
@@ -91,4 +106,5 @@ export default {
 			width: 100%;
 		}
 	}
+
 </style>

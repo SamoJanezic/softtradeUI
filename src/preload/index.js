@@ -1,6 +1,6 @@
 import { contextBridge } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
-import { getTable, getSingle } from '../../models/sql.js'
+import { getTable, getSingle, updateKategorija } from '../../models/sql.js'
 // Custom APIs for renderer
 const api = {
   getTable: (param) => {
@@ -8,6 +8,9 @@ const api = {
   },
   getSingle: (id) => {
     return getSingle(id)
+  },
+  updateKategorija: (marza, id) => {
+    return updateKategorija(marza, id)
   }
   // Add more APIs as needed
 }
