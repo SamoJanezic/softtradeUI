@@ -4,7 +4,7 @@
 			<div v-if="value != null && value.length > 80">
 				<label for="">{{ key }}:</label>
 				<div>
-					<textarea :value="value"></textarea>
+					<textarea v-model="product[key]"></textarea>
 				</div>
 			</div>
 			<div v-else-if="key === 'izdelek_ean' || key === 'id' || key === 'DOBAVITELJ_dobavitelj' || key === 'spremenjen_na'">
@@ -16,28 +16,38 @@
 			<div v-else-if="key === 'KATEGORIJA_kategorija'">
 				<label for="">{{ key }}:</label>
 				<div>
-					<select type="text" :value="value">
+					<select type="text" v-model="product[key]">
 						<option v-for="cat in categories" :key="cat">{{ cat }}</option>
 					</select>
 				</div>
 			</div>
 			<div v-else-if="key === 'zaloga'">
 				<label for="">{{ key }}:</label>
-				<select type="text" :value="value">
-						<option>Na zalogi</option>
-						<option>Ni na zalogi</option>
-					</select>
+				<select type="text" v-model="product[key]">
+					<option>Na zalogi</option>
+					<option>Ni na zalogi</option>
+				</select>
+			</div>
+			<div v-else-if="key === 'aktiven'">
+				<label for="">{{ key }}:</label>
+				<select type="text" v-model="product[key]">
+					<option>0</option>
+					<option>1</option>
+				</select>
 			</div>
 			<div v-else>
 				<label for="">{{ key }}:</label>
 				<div>
-					<input type="text" :value="value" />
+					<input type="text" v-model="product[key]"/>
 				</div>
 			</div>
 		</div>
 	</div>
-	<button class="btn btn-primary pill fw-medium save-btn" @click="$emit('closeEdit')">
+	<button class="btn btn-primary pill fw-medium save-btn" @click="saveEdit">
 		Shrani spremembe
+	</button>
+	<button class="btn btn-light pill fw-medium cancel-btn" @click="$emit('closeEdit')">
+		Prekliči in zapri
 	</button>
 </template>
 
@@ -48,17 +58,19 @@ export default {
 	},
 	data() {
 		return {
-			editScreen: 'Editing goes here',
 			product: null,
 			categories: null,
 		}
 	},
 	methods: {
-		closeEdit() {
-			this.$emit('close')
-		},
-		showId() {
-			console.log(this.rowId)
+		saveEdit() {
+			const obj = JSON.parse(JSON.stringify(this.product))
+			console.log(obj)
+			try {
+				const update = window.api.updateIzdelek(obj)
+			} catch (err) {
+				console.log(err)
+			}
 		},
 		getSingleRow() {
 			const row = window.api.getSingle(this.rowId)
@@ -70,7 +82,6 @@ export default {
 			this.categories = categories.map(el=> {
 				return el.kategorija
 			})
-			console.log(this.categories);
 		}
 	},
 	mounted() {
@@ -83,8 +94,8 @@ export default {
 <style lang="scss">
 @use "../css/buttons.scss";
 .form-group {
-	background-color: #222628;
-	color: white;
+	// background-color: #222628;
+	// color: white;
 	width: 100%;
 	height: 100%;
 	padding-top: 1.5em;
@@ -106,22 +117,22 @@ export default {
 		input, select {
 			width: 100%;
 			height: 3rem;
-			background-color: #3b3f43;
-			color: white;
+			// background-color: #3b3f43;
+			// color: white;
 			border-radius: 0.5rem;
 			margin-bottom: 2em;
-			border: none;
+			// border: none;
 			padding-left: 0.5rem;
 			font-size: 1.2rem;
 		}
 		textarea {
 			width: 100%;
 			height: 10rem;
-			background-color: #3b3f43;
-			color: white;
+			// background-color: #3b3f43;
+			// color: white;
 			border-radius: 0.5rem;
 			margin-bottom: 2em;
-			border: none;
+			// border: none;
 			padding-left: 0.5rem;
 			font-size: 1.2rem;
 		}

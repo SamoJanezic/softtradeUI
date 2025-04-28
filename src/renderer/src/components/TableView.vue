@@ -1,19 +1,19 @@
 <template>
-	<div v-if="editing">
+	<!-- <div v-if="editing">
 		<edit-view @closeEdit="closeEdit" :rowId/>
-	</div>
-	<div class="table-view" v-else>
+	</div> -->
+	<div class="table-view">
 		<ag-grid-vue
 			:rowData="rowData"
 			:columnDefs="columnDefs"
-			class="table-view_grid ag-theme-alpine-dark"
-			@row-doubleClicked="rowClicked"
+			class="table-view_grid ag-theme-alpine"
+			@row-doubleClicked="$emit('rowClicked', $event)"
 			:default-col-def="defaultColDef"
 			pagination=true
 			@cellKeyDown="onCellKeyDown"
 			>
 		</ag-grid-vue>
-		<button v-if="currentTable === 'KATEGORIJA'" @click="updateAll" class="btn btn-primary pill fw-medium save-btn">Shrani spremembe</button>
+		<button v-if="currentTable === 'KATEGORIJA'" @click="updateAll" class="btn btn-primary pill fw-medium save-btn cst-button">Shrani spremembe</button>
 	</div>
 </template>
 
@@ -29,17 +29,16 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 export default {
 	components: {
 		AgGridVue,
-		EditView
+		// EditView
 	},
 	props: {
 		'currentTable': String,
+		'editing': Boolean
 	 },
 	data() {
 		return {
-			editing: false,
 			rowData: [],
 			columnDefs: [],
-			rowId: null,
 			defaultColDef: {
 				resizable: true,
 				sortable: true,
@@ -63,16 +62,6 @@ export default {
 
 			this.rowData = rows;
 		},
-		rowClicked(event) {
-			if(this.currentTable === 'IZDELEK_DOBAVITELJ') {
-				console.log('Row was double clicked', event.node.id);
-				this.rowId = parseInt(event.node.id)+1;
-				this.editing = true;
-			}
-		},
-		closeEdit() {
-			this.editing = false;
-		},
 		onCellKeyDown(event) {
 			if(event.event.key === 'Enter') {
 				this.changedData.push([event.value, event.data.kategorija_id]);
@@ -87,12 +76,17 @@ export default {
 	},
 	watch: {
 		currentTable: function() {
+			console.log(this.currentTable)
 			this.getData(this.currentTable);
-			this.closeEdit();
 		},
+		editing: function() {
+			if(!this.editing) {
+				this.getData(this.currentTable);
+			}
+		}
 	},
 	mounted() {
-		this.getData('KATEGORIJA')
+		this.getData(this.currentTable)
 	}
 }
 </script>
@@ -104,6 +98,11 @@ export default {
 		&_grid {
 			height: 100vh;
 			width: 100%;
+		}
+
+		.cst-button {
+			right: -160px;
+			bottom: 25px
 		}
 	}
 
