@@ -1,8 +1,20 @@
+@use "./custom" as *;
+
 .save-btn {
 	position: fixed;
 	bottom: 0;
 	right: 0;
 	margin-bottom: 3em;
-	margin-right: 5em;
+	margin-right: 14em;
 	border-radius: 16px;
+}
+
+.cancel-btn {
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	margin-bottom: 3em;
+	margin-right: 4em;
+	border-radius: 16px;
+	border: 1px solid $primary;
 }
