@@ -54,7 +54,8 @@
 <script>
 export default {
 	props: {
-		rowId: Number
+		rowId: Number,
+		flashMessage: Object
 	},
 	data() {
 		return {
@@ -64,12 +65,13 @@ export default {
 	},
 	methods: {
 		saveEdit() {
-			const obj = JSON.parse(JSON.stringify(this.product))
-			console.log(obj)
+			const obj = JSON.parse(JSON.stringify(this.product));
 			try {
-				const update = window.api.updateIzdelek(obj)
+				window.api.updateIzdelek(obj);
+				this.$emit('showFlash', 'Spremembe so shranjene', 'success');
 			} catch (err) {
-				console.log(err)
+				this.$emit('showFlash', 'Napaka pri shranjevanju sprememb', 'error');
+				console.error(err);
 			}
 		},
 		getSingleRow() {
@@ -82,7 +84,7 @@ export default {
 			this.categories = categories.map(el=> {
 				return el.kategorija
 			})
-		}
+		},
 	},
 	mounted() {
 		this.getCategories();

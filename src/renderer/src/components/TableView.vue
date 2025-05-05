@@ -18,7 +18,6 @@
 </template>
 
 <script>
-import EditView from './EditView.vue';
 import { AgGridVue } from 'ag-grid-vue3';
 // import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
@@ -29,7 +28,6 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 export default {
 	components: {
 		AgGridVue,
-		// EditView
 	},
 	props: {
 		'currentTable': String,
@@ -70,7 +68,13 @@ export default {
 		},
 		updateAll(){
 			this.changedData.forEach(el => {
-				window.api.updateKategorija(el[0], el[1])
+				try {
+					window.api.updateKategorija(el[0], el[1])
+					this.$emit('showFlash', 'Spremembe so bile shranjene', 'success');
+				} catch (err) {
+					this.$emit('showFlash', 'Napaka pri shranjevanju sprememb', 'error');
+					console.error(err);
+				}
 			})
 		}
 	},
