@@ -1,16 +1,19 @@
 <template>
 	<div class="app">
-		<sidebar @change-view="changeView"/>
-		<edit-view v-if="editing" @closeEdit="closeEdit" :rowId/>
-		<table-view v-else :currentTable :editing @rowClicked="rowClicked" />
+		<flash-message v-if="flashMessage" :message="flashMessage.text" :type="flashMessage.type" />
+		<sidebar @change-view="changeView" />
+		<home-view v-if="isHome" />
+		<edit-view v-if="editing" @closeEdit="closeEdit" @showFlash="showFlashMessage" :rowId />
+		<table-view v-else-if="!isHome" :currentTable :editing @rowClicked="rowClicked" @showFlash="showFlashMessage" />
 	</div>
 </template>
 
 <script>
+import HomeView from './components/HomeView.vue'
 import Sidebar from './components/SidebarView.vue'
 import TableView from './components/TableView.vue'
-import EditView from './components/EditView.vue';
-// import { ref } from 'vue';
+import EditView from './components/editView.vue';
+import FlashMessage from './components/FlashMessage.vue';
 
 
 export default {
@@ -19,27 +22,31 @@ export default {
 		Sidebar,
 		TableView,
 		EditView,
+		FlashMessage,
+		HomeView,
 	},
 	data() {
 		return {
 			currentTable: 'IZDELEK_DOBAVITELJ',
 			editing: false,
-			rowId: null
+			rowId: null,
+			isHome: true,
+			flashMessage: null
 		}
 	},
 	methods: {
-		saveEdit() {
-			console.log('save edit');
-		},
 		closeEdit() {
 			this.editing = false;
-
 		},
-		changeView(table) {
-			if(table === 'home') {
+		changeView(view) {
+			if(view === 'home') {
+				this.isHome = true;
+				this.editing = false;
+				return;
 			}
+			this.isHome = false;
 			this.editing = false;
-			this.currentTable = table;
+			this.currentTable = view;
 		},
 		rowClicked(event) {
 			if(this.currentTable === 'IZDELEK_DOBAVITELJ') {
@@ -47,12 +54,18 @@ export default {
 				this.editing = true;
 			}
 		},
+		showFlashMessage(text, type) {
+            this.flashMessage = { text: text, type: type };
+            setTimeout(() => {
+                this.flashMessage = null;
+            }, 3500);
+        },
 	}
 }
 </script>
 
 
-<style lang="scss">
+<style>
 .app {
 	display: flex;
 	flex-direction: row;
