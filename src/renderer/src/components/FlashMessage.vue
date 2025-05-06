@@ -1,31 +1,24 @@
 <template>
     <transition name="fade">
-        <div v-if="visible" :class="['flash-message', type]">
-            {{ message }}
+        <div v-if="visible" :class="['flash-message', flashStore.message.type]">
+            {{ flashStore.message.text }}
         </div>
     </transition>
 </template>
 
 <script>
+import { useFlashStore } from '../stores/FlashStore';
+
 export default {
     name: 'FlashMessage',
-    props: {
-        message: {
-            type: String,
-            required: true,
-        },
-        type: {
-            type: String,
-            default: 'success', // Can be 'success', 'error', etc.
-        },
-    },
     data() {
         return {
-            visible: false, // Controls visibility for transitions
+            visible: false,
+            flashStore: useFlashStore(),
         };
     },
     watch: {
-        message(newVal) {
+        'flashStore.message.text'(newVal) {
             if (newVal) {
                 this.showMessage();
             }
@@ -33,14 +26,16 @@ export default {
     },
     methods: {
         showMessage() {
-            this.visible = true; // Show the message
+            this.visible = true;
             setTimeout(() => {
-                this.visible = false; // Hide the message after 3 seconds
+                this.visible = false;
+                this.flashStore.message.text = null;
+                this.flashStore.message.type = null;
             }, 3000);
         },
     },
     mounted() {
-        if (this.message) {
+        if (this.flashStore.message.text) {
             this.showMessage();
         }
     },
@@ -55,7 +50,7 @@ export default {
     top: 25px;
     left: 50%;
     transform: translateX(-50%);
-    padding: 10px 20px;
+    padding: 10px 35px;
     border-radius: 20px;
     font-size: 1rem;
     color: white;
@@ -64,14 +59,13 @@ export default {
 }
 
 .flash-message.success {
-    background-color: #4caf50; /* Green for success */
+    background-color: #4caf50;
 }
 
 .flash-message.error {
-    background-color: #f44336; /* Red for error */
+    background-color: #f44336;
 }
 
-/* Transition classes */
 .fade-enter-active,
 .fade-leave-active {
     transition: opacity 0.8s ease;

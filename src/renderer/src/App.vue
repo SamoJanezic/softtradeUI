@@ -1,10 +1,8 @@
 <template>
 	<div class="app">
-		<flash-message v-if="flashMessage" :message="flashMessage.text" :type="flashMessage.type" />
-		<sidebar @change-view="changeView" />
-		<home-view v-if="isHome" />
-		<edit-view v-if="editing" @closeEdit="closeEdit" @showFlash="showFlashMessage" :rowId />
-		<table-view v-else-if="!isHome" :currentTable :editing @rowClicked="rowClicked" @showFlash="showFlashMessage" />
+		<flash-message/>
+		<sidebar/>
+		<component :is="activeComp" />
 	</div>
 </template>
 
@@ -12,58 +10,40 @@
 import HomeView from './components/HomeView.vue'
 import Sidebar from './components/SidebarView.vue'
 import TableView from './components/TableView.vue'
-import EditView from './components/editView.vue';
 import FlashMessage from './components/FlashMessage.vue';
-
+import { useViewStore } from './stores/ViewStore';
 
 export default {
 	name: 'App',
 	components: {
 		Sidebar,
 		TableView,
-		EditView,
 		FlashMessage,
 		HomeView,
 	},
 	data() {
 		return {
-			currentTable: 'IZDELEK_DOBAVITELJ',
-			editing: false,
-			rowId: null,
-			isHome: true,
-			flashMessage: null
+			viewStore: useViewStore(),
+			activeComp: 'home-view',
 		}
 	},
 	methods: {
-		closeEdit() {
-			this.editing = false;
-		},
 		changeView(view) {
 			if(view === 'home') {
-				this.isHome = true;
-				this.editing = false;
+				this.activeComp = 'home-view';
 				return;
 			}
-			this.isHome = false;
-			this.editing = false;
-			this.currentTable = view;
-		},
-		rowClicked(event) {
-			if(this.currentTable === 'IZDELEK_DOBAVITELJ') {
-				this.rowId = parseInt(event.node.id) + 1;
-				this.editing = true;
-			}
-		},
-		showFlashMessage(text, type) {
-            this.flashMessage = { text: text, type: type };
-            setTimeout(() => {
-                this.flashMessage = null;
-            }, 3500);
-        },
+			this.activeComp = 'table-view';
+		}
+	},
+	watch: {
+		'viewStore.currentTable': function() {
+			this.changeView(this.viewStore.currentTable);
+			console.log('watcher in app.vue: ', this.viewStore.currentTable);
+		}
 	}
 }
 </script>
-
 
 <style>
 .app {

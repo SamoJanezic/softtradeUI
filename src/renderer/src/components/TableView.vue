@@ -2,39 +2,49 @@
 	<!-- <div v-if="editing">
 		<edit-view @closeEdit="closeEdit" :rowId/>
 	</div> -->
-	<div class="table-view">
+	<div v-if="editState">
+		<edit-view :rowId @closeEdit="closeEdit" />
+	</div>
+	<div v-else class="table-view">
 		<ag-grid-vue
 			:rowData="rowData"
 			:columnDefs="columnDefs"
 			class="table-view_grid ag-theme-alpine"
-			@row-doubleClicked="$emit('rowClicked', $event)"
+			@row-doubleClicked="rowClicked"
 			:default-col-def="defaultColDef"
 			pagination=true
 			@cellKeyDown="onCellKeyDown"
 			>
 		</ag-grid-vue>
-		<button v-if="currentTable === 'KATEGORIJA'" @click="updateAll" class="btn btn-primary pill fw-medium save-btn cst-button">Shrani spremembe</button>
+		<button v-if="viewStore.currentTable === 'KATEGORIJA'" @click="updateAll" class="btn btn-primary pill fw-medium save-btn cst-button">Shrani spremembe</button>
 	</div>
 </template>
 
 <script>
+import EditView from './editView.vue';
 import { AgGridVue } from 'ag-grid-vue3';
 // import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { useViewStore } from '../stores/ViewStore.js';
+import { useFlashStore } from '../stores/FlashStore.js';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 export default {
 	components: {
 		AgGridVue,
+		EditView,
 	},
 	props: {
-		'currentTable': String,
 		'editing': Boolean
-	 },
+	},
 	data() {
 		return {
+			rowId: null,
+			editState: false,
+			flashStore: useFlashStore(),
+			viewStore: useViewStore(),
 			rowData: [],
 			columnDefs: [],
 			defaultColDef: {
@@ -69,28 +79,37 @@ export default {
 		updateAll(){
 			this.changedData.forEach(el => {
 				try {
-					window.api.updateKategorija(el[0], el[1])
-					this.$emit('showFlash', 'Spremembe so bile shranjene', 'success');
+					window.api.updateKategorija(el[0], el[1]);
+					this.flashStore.setFlashMessage('Spremembe so shranjene', 'success');
 				} catch (err) {
-					this.$emit('showFlash', 'Napaka pri shranjevanju sprememb', 'error');
+					this.flashStore.setFlashMessage('Napaka pri shranjevanju sprememb', 'error');
 					console.error(err);
 				}
 			})
-		}
+		},
+		rowClicked(event) {
+			if(this.viewStore.currentTable === 'IZDELEK_DOBAVITELJ') {
+				this.editState = true;
+				this.rowId = parseInt(event.node.id) + 1;
+			}
+		},
+		closeEdit() {
+			this.editState = false;
+			this.rowId = null;
+		},
 	},
 	watch: {
-		currentTable: function() {
-			console.log(this.currentTable)
-			this.getData(this.currentTable);
+		'viewStore.currentTable': function() {
+			this.getData(this.viewStore.currentTable);
 		},
 		editing: function() {
 			if(!this.editing) {
-				this.getData(this.currentTable);
+				this.getData(this.viewStore.currentTable);
 			}
 		}
 	},
 	mounted() {
-		this.getData(this.currentTable)
+		this.getData(this.viewStore.currentTable);
 	}
 }
 </script>
@@ -109,5 +128,4 @@ export default {
 			bottom: 25px
 		}
 	}
-
 </style>

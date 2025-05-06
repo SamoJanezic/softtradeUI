@@ -128,7 +128,7 @@
 					</a>
 				</li>
 				<li>
-					<a href="#" class="icon nav-link text-white" @click="$emit('changeView', 'IZDELEK_DOBAVITELJ')">
+					<a href="#" class="icon nav-link text-white" @click="changeView('IZDELEK_DOBAVITELJ')">
 						<svg class="bi me-2" width="16" height="16">
 							<use xlink:href="#grid"></use>
 						</svg>
@@ -136,7 +136,7 @@
 					</a>
 				</li>
 				<li>
-					<a href="#" class="icon nav-link text-white" @click="$emit('changeView', 'KATEGORIJA')">
+					<a href="#" class="icon nav-link text-white" @click="changeView('KATEGORIJA')">
 						<svg class="bi me-2" width="16" height="16">
 							<use xlink:href="#table"></use>
 						</svg>
@@ -180,6 +180,28 @@
 </template>
 
 <script>
+import { useViewStore } from '../stores/viewStore';
+
+
+export default {
+	name: 'SidebarView',
+	props: {
+		// Define any props you need here
+	},
+	data() {
+		return {
+			viewStore: useViewStore(),
+		};
+	},
+	methods: {
+		changeView(view) {
+			if(view === 'home') {
+
+			};
+			this.viewStore.setCurrentTable(view);
+		}
+	},
+};
 
 </script>
 
@@ -198,8 +220,4 @@
 		fill: white;
 	}
 }
-
-
-
-
 </style>

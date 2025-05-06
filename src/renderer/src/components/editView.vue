@@ -52,6 +52,8 @@
 </template>
 
 <script>
+import { useFlashStore } from '../stores/FlashStore.js';
+
 export default {
 	props: {
 		rowId: Number,
@@ -59,6 +61,7 @@ export default {
 	},
 	data() {
 		return {
+			flashStore: useFlashStore(),
 			product: null,
 			categories: null,
 		}
@@ -68,9 +71,9 @@ export default {
 			const obj = JSON.parse(JSON.stringify(this.product));
 			try {
 				window.api.updateIzdelek(obj);
-				this.$emit('showFlash', 'Spremembe so shranjene', 'success');
+				this.flashStore.setFlashMessage('Spremembe so shranjene', 'success');
 			} catch (err) {
-				this.$emit('showFlash', 'Napaka pri shranjevanju sprememb', 'error');
+				this.flashStore.setFlashMessage('Napaka pri shranjevanju sprememb', 'error');
 				console.error(err);
 			}
 		},
