@@ -1,8 +1,5 @@
 <template>
-	<!-- <div v-if="editing">
-		<edit-view @closeEdit="closeEdit" :rowId/>
-	</div> -->
-	<div v-if="editState">
+	<div v-if="viewStore.editState" class="edit-view">
 		<edit-view :rowId @closeEdit="closeEdit" />
 	</div>
 	<div v-else class="table-view">
@@ -16,7 +13,7 @@
 			@cellKeyDown="onCellKeyDown"
 			>
 		</ag-grid-vue>
-		<button v-if="viewStore.currentTable === 'KATEGORIJA'" @click="updateAll" class="btn btn-primary pill fw-medium save-btn cst-button">Shrani spremembe</button>
+		<button v-if="viewStore.currentView === 'KATEGORIJA'" @click="updateAll" class="btn btn-primary pill fw-medium save-btn cst-button">Shrani spremembe</button>
 	</div>
 </template>
 
@@ -36,13 +33,9 @@ export default {
 		AgGridVue,
 		EditView,
 	},
-	props: {
-		'editing': Boolean
-	},
 	data() {
 		return {
 			rowId: null,
-			editState: false,
 			flashStore: useFlashStore(),
 			viewStore: useViewStore(),
 			rowData: [],
@@ -88,28 +81,24 @@ export default {
 			})
 		},
 		rowClicked(event) {
-			if(this.viewStore.currentTable === 'IZDELEK_DOBAVITELJ') {
-				this.editState = true;
+			if(this.viewStore.currentView === 'IZDELEK_DOBAVITELJ') {
+				this.viewStore.editState = true;
 				this.rowId = parseInt(event.node.id) + 1;
 			}
 		},
 		closeEdit() {
-			this.editState = false;
+			this.viewStore.editState = false;
 			this.rowId = null;
 		},
 	},
 	watch: {
-		'viewStore.currentTable': function() {
-			this.getData(this.viewStore.currentTable);
+		'viewStore.currentView': function() {
+			this.viewStore.editState = false;
+			this.getData(this.viewStore.currentView);
 		},
-		editing: function() {
-			if(!this.editing) {
-				this.getData(this.viewStore.currentTable);
-			}
-		}
 	},
 	mounted() {
-		this.getData(this.viewStore.currentTable);
+		this.getData(this.viewStore.currentView);
 	}
 }
 </script>

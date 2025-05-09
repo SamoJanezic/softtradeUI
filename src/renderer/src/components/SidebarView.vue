@@ -120,7 +120,7 @@
 			<hr />
 			<ul class="nav nav-pills flex-column mb-auto">
 				<li class="nav-item">
-					<a href="#" class="icon nav-link active" aria-current="page" @click="$emit('changeView', 'home')">
+					<a href="#" class="icon nav-link active" aria-current="page" @click="changeView('home')">
 						<svg class="bi me-2" width="16" height="16">
 							<use xlink:href="#home"></use>
 						</svg>
@@ -185,9 +185,6 @@ import { useViewStore } from '../stores/viewStore';
 
 export default {
 	name: 'SidebarView',
-	props: {
-		// Define any props you need here
-	},
 	data() {
 		return {
 			viewStore: useViewStore(),
@@ -195,10 +192,8 @@ export default {
 	},
 	methods: {
 		changeView(view) {
-			if(view === 'home') {
-
-			};
-			this.viewStore.setCurrentTable(view);
+			this.viewStore.setCurrentView(view);
+			this.viewStore.editState = false;
 		}
 	},
 };

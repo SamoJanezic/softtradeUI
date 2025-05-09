@@ -34,12 +34,11 @@ export default {
 				return;
 			}
 			this.activeComp = 'table-view';
-		}
+		},
 	},
 	watch: {
-		'viewStore.currentTable': function() {
-			this.changeView(this.viewStore.currentTable);
-			console.log('watcher in app.vue: ', this.viewStore.currentTable);
+		'viewStore.currentView': function() {
+			this.changeView(this.viewStore.currentView);
 		}
 	}
 }
