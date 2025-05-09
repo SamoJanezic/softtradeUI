@@ -180,7 +180,7 @@
 </template>
 
 <script>
-import { useViewStore } from '../stores/viewStore';
+import { useViewStore } from '../stores/ViewStore';
 
 
 export default {

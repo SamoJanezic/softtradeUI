@@ -1,6 +1,9 @@
 import { contextBridge } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 import { getTable, getSingle, updateKategorija, updateIzdelek } from '../../models/sql.js'
+import { up } from '../../external/nodejsqlite/scripts/up.js'
+import { downloadStart } from '../../external/nodejsqlite/xml-downloader/app.js'
+
 // Custom APIs for renderer
 const api = {
   updateIzdelek: (obj) => {
@@ -14,7 +17,14 @@ const api = {
   },
   updateKategorija: (marza, id) => {
     return updateKategorija(marza, id)
+  },
+  clearDb: () => {
+    return up()
+  },
+  downloadXml: () => {
+    return downloadStart();
   }
+
   // Add more APIs as needed
 }
 
