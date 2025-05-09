@@ -5,6 +5,7 @@ export const useViewStore = defineStore("viewStore", {
 		currentTable: null,
 		selectedRow: null,
 		currentView: 'home',
+		editState: false,
 	}),
 	getters: {
 		getCurrentTable: (state) => {
@@ -17,6 +18,9 @@ export const useViewStore = defineStore("viewStore", {
 		},
 		setCurrentView(view) {
 			this.currentView = view;
+		},
+		setEditState(state) {
+			this.editState = state;
 		}
 	}
 })
