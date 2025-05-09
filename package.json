@@ -24,8 +24,11 @@
     "ag-grid-vue3": "^33.2.3",
     "better-sqlite3": "^11.9.1",
     "bootstrap": "^5.3.5",
+    "nodejs-file-downloader": "^4.13.0",
     "pinia": "^3.0.2",
-    "sass-loader": "^16.0.5"
+    "sass-loader": "^16.0.5",
+    "sequelize": "^6.37.7",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config": "^2.0.0",
